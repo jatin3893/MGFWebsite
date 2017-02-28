@@ -1,0 +1,54 @@
+@import '/css/theme.less';
+
+@font-face {
+    font-family: 'Cooper';
+    font-style: normal;
+    font-weight: normal;
+    src: url("/fonts/CooperBlackStd.otf") format("opentype");
+}
+
+@font-face {
+    font-family: 'DroidSerif';
+    font-style: normal;
+    font-weight: normal;
+    src: url("/fonts/DroidSerif.ttf") format("truetype");
+}
+
+.nav {
+    font-size: 1.5em;
+    padding: 10px;
+}
+
+.navbar-brand {
+    font-family: 'Cooper';
+    padding-top: 20px;
+    font-size: 3.5em;
+}
+
+.nav li > .active a {
+    color: darken(@color-primary-background, 10%);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    color: @color-primary;
+    background: @color-primary-background;
+    font-family: 'DroidSerif', sans-serif;
+}
+
+#page {
+    width: 75%;
+    margin: 0 auto;
+    background-color: @color-primary-background;
+    -webkit-box-shadow: 3px 3px 5px 6px #ccc;  /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+    -moz-box-shadow:    3px 3px 5px 6px #ccc;  /* Firefox 3.5 - 3.6 */
+    box-shadow:         3px 3px 5px 6px #ccc;  /* Opera 10.5, IE 9, Firefox 4+, Chrome 6+, iOS 5 */
+}
+
+#main {
+    min-height: 75%;
+}
+
+
+

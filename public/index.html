@@ -1,0 +1,40 @@
+<html>
+    <head>
+        <title>Milan Gold & Forex Pvt. Ltd.</title>
+        <link rel = "stylesheet" type = "text/css" href = "css/bootstrap.min.css">
+        <link rel = "stylesheet" type = "text/css" href = "css/nice.css" />
+        <link rel = "stylesheet/less" type = "text/css" href = "css/layout.less" />
+
+        <script src="js/jquery.min.js" type="text/javascript"></script>
+        <script src="js/bootstrap.min.js" type="text/javascript"></script>
+        <script src="js/less.min.js" type="text/javascript"></script>
+
+        <script src="js/angular.min.js" type="text/javascript"></script>
+        <script src="js/angular-route.min.js" type="text/javascript"></script>
+        <script src="js/mgfController.js" type="text/javascript"></script>
+    </head>
+
+    <body ng-app = 'mgfApp'>
+        <div id = 'page'  ng-controller="mainController">
+            <nav class="navbar navbar-default ">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <div class="navbar-brand"> Milan Gold and Forex Pvt. Ltd. </div>
+                    </div>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li id = 'navHome' class="active"><a href="#">Home</a></li>
+                        <li id = 'navServices'><a href="#Services"> Services </a></li>
+                        <li id = 'navAbout'><a href="#About"> About Us </a></li>
+                        <li id = 'navContact'><a href="#Contact"> Contact </a></li>
+                    </ul>
+                </div> 
+            </nav>
+            <div id = "main">
+                <div ng-view>
+                </div>
+            </div>
+            <div id = 'footer' ng-include = "'templates/footer.html'">
+            </div>
+        </div>
+    </body>
+</html>

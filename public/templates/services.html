@@ -1,0 +1,21 @@
+<link rel = "stylesheet/less" type = "text/css" href = "templates/services.less" />
+<script src="js/less.min.js" type="text/javascript"></script>
+
+<div id = "services">
+    <div class="sidebar col-md-2">
+        <div class="sidebar-header">
+            Services
+        </div>
+        <div>
+            <ul class="sidebar-nav" data-ng-repeat="service in services">
+                <li id = {{service.id}}><a href="" ng-click= 'init(service)'> {{service.title}} </a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id = 'content' class="col-md-10">
+        <ng-include src="current_view">
+            
+        </ng-include>
+    </div>
+</div>
