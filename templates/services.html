@@ -1,0 +1,19 @@
+<div class = "services">
+    <div class="row">
+        <div class="sidebar col-lg-2 col-md-3 col-sm-12 col-xs-12">
+            <div class="nav-header">
+                <h3>Services</h3>
+            </div>
+            <ul class="nav navbar-nav">
+                <li data-ng-repeat="service in services" id = {{service.id}} class="servicesLi">
+                    <a href="" ng-click='init(service)'> {{service.title}} </a>
+                </li>
+            </ul>
+        </div>
+
+        <div id = 'content' class="col-lg-10 col-md-9 col-sm-12 col-xs-12">
+            <ng-include src="current_view">
+            </ng-include>
+        </div>
+    </div>
+</div>

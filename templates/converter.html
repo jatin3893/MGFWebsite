@@ -1,0 +1,37 @@
+<form class="form-horizontal" ng-controller="ConverterController as converterController">
+    <fieldset>
+        <div class="form-group">
+            <label for="inputCur1" class="col-lg-2 col-md-2 col-sm-4 col-xs-4 control-label"> From </label>
+            <div class="col-lg-5 col-md-5 col-sm-4 col-xs-4">
+                <input type="number" id = "inputCur1" placeholder=1 class="form-control" ng-model="fromQuantity" ng-change="fromChanged()">
+            </div>
+            <div class="col-lg-5 col-md-5 col-sm-4 col-xs-4 dropdown-container">
+                <select class="btn btn-success dropdown-toggle" 
+                        ng-model="fromCurrency" 
+                        ng-options="child as child.symbol for child in currencyTable" 
+                        ng-change="fromChanged()">
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="inputCur1" class="col-lg-2 col-md-2 col-sm-4 col-xs-4 control-label"> To </label>
+            <div class="col-lg-5 col-md-5 col-sm-4 col-xs-4">
+                <input type="number" 
+                        id = "inputCur1" 
+                        placeholder=1 
+                        class="form-control" 
+                        ng-model="toQuantity" 
+                        ng-change="toChanged()">
+            </div>
+            <div class="col-lg-5 col-md-5 col-sm-4 col-xs-4 dropdown-container">
+                <select class="btn btn-success dropdown-toggle" 
+                        ng-model="toCurrency" 
+                        ng-options="child as child.symbol for child in currencyTable" 
+                        ng-change="toChanged()">
+                </select>
+            </div>
+        </div>
+    </fieldset>
+    *These are approximate values. <a href="#Contact">Contact us</a> for the current Conversion Rates.
+</form>

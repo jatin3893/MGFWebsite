@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <title>Milan Gold & Forex Pvt. Ltd.</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel = "stylesheet" type = "text/css" href = "css/bootstrap.min.css">
+        <link rel = "stylesheet" type = "text/css" href = "css/font-awesome.min.css">
+        <link rel = "stylesheet" type = "text/css" href = "css/main.css">
+
+        
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+        <script type="text/javascript" src="js/angular.js"></script>
+        <script type="text/javascript" src="js/angular-route.min.js"></script>
+        <script type="text/javascript" src="js/mgfController.js"></script>
+    </head>
+
+    <body ng-app = 'mgfApp'>
+        <div id='page'>
+            <nav class="navbar navbar-default ">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>                        
+                        </button>
+                        <a class="navbar-brand"> Milan Gold and Forex Pvt. Ltd. </a>
+                    </div>
+                    <div class='navbar-collapse collapse' id='myNavbar'>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li id = 'navHome' class="active"><a href="#">Home</a></li>
+                            <li id = 'navServices'><a href="#Services"> Services </a></li>
+                            <li id = 'navAbout'><a href="#About"> About Us </a></li>
+                            <li id = 'navContact'><a href="#Contact"> Contact </a></li>
+                        </ul>
+                    </div>
+                </div> 
+            </nav>
+            <div id = "main">
+                <div ng-view>
+                </div>
+            </div>
+            <div id = 'footer' ng-include = "'templates/footer.html'">
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,62 @@
+<div class = 'contact'>
+    <div id="googleMap"> </div>
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <div class = 'panel panel-success centerAlign'>
+                <div class = 'panel-heading'> 
+                    E-Mail us at:
+                </div>
+                <div class="panel-content spacing">
+                    <a href='mailto:mgfforex@gmail.com'> mgfforex@gmail.com </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <div class = 'panel panel-warning centerAlign'>
+                <div class = 'panel-heading'> 
+                    <h3 class="panel-title">Address</h3>
+                </div>
+                <div class="panel-content spacing">
+                    <strong>Milan Gold and Forex Pvt. Ltd.</strong> <br>
+                    Shop No. 2, Om Shivam CHS <br>
+                    Tarun Bharat Society <br>
+                    Off Sahar Road, Near Cigarette Factory <br>
+                    Chakala, Andheri (East) <br>
+                    Mumbai, India <br>
+                    Pin Code: 400 099
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <div class = 'panel panel-danger centerAlign'>
+                <div class = 'panel-heading'> 
+                    <h3 class="panel-title">Call us</h3> 
+                </div>
+                <div class="panel-content spacing">
+                    022 2836 7017 <br>
+                    022 2836 7017
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function initMap() {
+        var mgfCoordinates = {
+                lat: 19.107644, 
+                lng: 72.8596134
+            };
+        var map = new google.maps.Map(document.getElementById('googleMap'), {
+            zoom: 16,
+            center: mgfCoordinates
+        });
+        var marker = new google.maps.Marker({
+        position: mgfCoordinates,
+        map: map
+        });
+    }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?callback=initMap"></script>

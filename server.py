@@ -7,7 +7,7 @@ import datetime
 class SimpleRequestHandler(web.RequestHandler):
     def post(self, update):
         if update == 'update_rate':
-            changes = json.loads(self.request.body)['data'];
+            changes = json.loads(self.request.body)['data']
             original = None
             currentTime = datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
 
@@ -48,7 +48,7 @@ def start():
     app = web.Application([
             (r"/api/(.*)", SimpleRequestHandler),
             (r"/(.*)", web.StaticFileHandler, {
-                "path": r"./public",
+                "path": r".",
                 "default_filename": "index.html"
             })
         ], debug = True)
