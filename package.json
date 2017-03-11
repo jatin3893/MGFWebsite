@@ -18,7 +18,15 @@
   "homepage": "https://github.com/jatin3893/MGFWebsite#readme",
   "devDependencies": {
     "grunt": "^1.0.1",
+    "grunt-contrib-less": "^1.4.1",
+    "grunt-contrib-watch": "^1.0.0",
     "jit-grunt": "^0.10.0",
     "less": "^2.7.2"
-  }
+  },
+  "dependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-less": "^1.4.1",
+    "grunt-contrib-watch": "^1.0.0",
+    "jit-grunt": "^0.10.0",
+    "less": "^2.7.2"  }
 }
