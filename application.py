@@ -1,34 +1,69 @@
-from flask import Flask
+# Tornado
+from tornado import ioloop
+from tornado import web
+import json
+import datetime
 
-# print a nice greeting.
-def say_hello(username = "World"):
-    return '<p>Hello %s!</p>\n' % username
+class SimpleRequestHandler(web.RequestHandler):
+    def get(self):
+        self.write('Testing Web APp')
 
-# some bits of text for the page.
-header_text = '''
-    <html>\n<head> <title>EB Flask Test</title> </head>\n<body>'''
-instructions = '''
-    <p><em>Hint</em>: This is a RESTful web service! Append a username
-    to the URL (for example: <code>/Thelonious</code>) to say hello to
-    someone specific.</p>\n'''
-home_link = '<p><a href="/">Back</a></p>\n'
-footer_text = '</body>\n</html>'
+    def post(self, update):
+        if update == 'update_rate':
+            changes = json.loads(self.request.body)['data']
+            original = None
+            currentTime = datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
 
-# EB looks for an 'application' callable by default.
-application = Flask(__name__)
+            with open('public/data/currentRates.json', 'r') as fp:
+                original = json.load(fp)
 
-# add a rule for the index page.
-application.add_url_rule('/', 'index', (lambda: header_text +
-    say_hello() + instructions + footer_text))
+            for currency in original:
+                symbol = str(currency["symbol"])
+                if currency["buy"] == changes[symbol]["buy"] and currency["sell"] == changes[symbol]["sell"]:
+                    continue
 
-# add a rule when the page is accessed with a name appended to the site
-# URL.
-application.add_url_rule('/<username>', 'hello', (lambda username:
-    header_text + say_hello(username) + home_link + footer_text))
+                print currentTime
+                currency["buyHistory"].insert(0, {
+                    "date": currentTime,
+                    "value": currency["buy"],
+                })
+                if len(currency["buyHistory"]) > 60:
+                    currency["buyHistory"].pop()
+                currency["buy"] = changes[symbol]["buy"]
 
-# run the app.
-if __name__ == "__main__":
-    # Setting debug to True enables debug output. This line should be
-    # removed before deploying a production app.
-    application.debug = True
-    application.run()
+                currency["sellHistory"].insert(0, {
+                    "date": currentTime,
+                    "value": currency["sell"],
+                })
+                if len(currency["sellHistory"]) > 60:
+                    currency["sellHistory"].pop()
+                currency["sell"] = changes[symbol]["sell"]
+
+                print currency["buyHistory"]
+
+            with open('public/data/currentRates.json', 'w') as fp:
+                json.dump(original, fp, indent = 4)
+
+            self.write('Success');
+
+def start():
+    # Initialize the app
+    # app = web.Application([
+    #         (r"/api/(.*)", SimpleRequestHandler),
+    #         (r"/(.*)", web.StaticFileHandler, {
+    #             "path": r".",
+    #             "default_filename": "index.html"
+    #         })
+    #     ], debug = True)
+    app = web.Application([
+            (r"/.*", SimpleRequestHandler)
+        ], debug = True)
+
+    app.listen(5000)
+
+    print 'Start!'
+    ioloop.IOLoop.current().start()
+    return app
+
+if __name__ == '__main__':
+    start()
