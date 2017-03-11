@@ -53,7 +53,7 @@ def start():
             })
         ], debug = True)
 
-    app.listen(8080)
+    app.listen(80)
 
     print 'Start!'
     ioloop.IOLoop.current().start()
