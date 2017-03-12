@@ -1,6 +1,9 @@
 # Tornado
 from tornado import ioloop
 from tornado import web
+from tornado import wsgi
+
+# std libs
 import json
 import datetime
 
@@ -46,24 +49,19 @@ class SimpleRequestHandler(web.RequestHandler):
 
             self.write('Success');
 
-def start():
-    # Initialize the app
-    # app = web.Application([
-    #         (r"/api/(.*)", SimpleRequestHandler),
-    #         (r"/(.*)", web.StaticFileHandler, {
-    #             "path": r".",
-    #             "default_filename": "index.html"
-    #         })
-    #     ], debug = True)
-    app = web.Application([
-            (r"/.*", SimpleRequestHandler)
-        ], debug = True)
 
-    app.listen(5000)
+# Initialize the app
+app = web.Application([
+        (r"/api/(.*)", SimpleRequestHandler),
+        (r"/(.*)", web.StaticFileHandler, {
+            "path": r".",
+            "default_filename": "index.html"
+        })
+    ], debug = True)
 
-    print 'Start!'
-    ioloop.IOLoop.current().start()
-    return app
+application = wsgi.WSGIAdapter(app)
 
 if __name__ == '__main__':
-    start()
+    print 'Start http://localhost:5000'
+    app.listen(5000)
+    ioloop.IOLoop.current().start()
