@@ -8,9 +8,6 @@ import json
 import datetime
 
 class SimpleRequestHandler(web.RequestHandler):
-    def get(self):
-        self.write('Testing Web APp')
-
     def post(self, update):
         if update == 'update_rate':
             changes = json.loads(self.request.body)['data']
