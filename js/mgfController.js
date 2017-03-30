@@ -1,5 +1,5 @@
 // create the module and name it scotchApp
-var mgfApp = angular.module('mgfApp', ['ngRoute']);
+var mgfApp = angular.module('mgfApp', ['ngRoute', "chart.js"]);
 
 // configure our routes
 mgfApp.config(function($routeProvider) {
@@ -34,8 +34,6 @@ mgfApp.config(function($routeProvider) {
 mgfApp.controller('mainController', function($route, $routeParams, $location, $scope) {
     $('.nav li').removeClass('active');
     $('#navHome').addClass('active');
-
-
 });
 
 mgfApp.controller('servicesController', function($scope) {
@@ -99,91 +97,60 @@ mgfApp.controller('contactController', function($scope) {
 });
 
 mgfApp.controller('exchangeRatesController', function($scope, $http) {
-    $http.get("/data/currentRates.json")
-        .then( function(response) {
-            $scope.currencyTable = response.data;
-            $scope.init()
-        });
-    
-    $scope.init = function() {
-        var ctx = document.getElementById("historyChart").getContext("2d");
-        config = {
-            type: 'line',
-            data: {
-                datasets: []
-            },
-            options: {
-                title:{
-                    text: "Foreign Currency Value Over Time"
+    $scope.options = {
+        scales: {
+            xAxes: [{
+                type: 'time',
+                time: {
+                    format: 'DD/MM/YYYY HH:mm:ss'
                 },
-                scales: {
-                    xAxes: [{
-                        type: "time",
-                        time: {
-                            // time format
-                            format: 'DD/MM/YYYY HH:mm:ss',
-                            // round: 'day'
-                            tooltipFormat: 'll HH:mm:ss'
-                        },
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Date'
-                        }
-                    }, ],
-                    yAxes: [{
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'Value (In INR)'
-                        }
-                    }]
-                },
-            }
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Date'
+                }
+            }],
+            yAxes: [{
+                type: 'linear',
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Value (In INR)'
+                }
+            }]
+        },
+        legend: {
+            display: true
         }
+    };
 
-        $scope.historyChart = new Chart(ctx, config);
+    $scope.refresh = function() {
+        $http.get("/data/currentRates.json")
+            .then( function(response) {
+                $scope.currencyTable = response.data;
+                $scope.series = [];
+                $scope.data = [];
 
-        for (index in $scope.currencyTable) {
-            currency = $scope.currencyTable[index]
-            console.log(currency);
-            if (currency.show) {
-                addCurrency(currency);
-                console.log($scope.historyChart);
+                $scope.currencyTable.forEach(function(currency) {
+                    $scope.toggleVisibility(currency);
+                }, this);
             }
-        }
+        );
     }
 
-    $scope.update = function(currency) {
+    $scope.toggleVisibility = function(currency) {
         if (currency.show) {
-            addCurrency(currency);
+            $scope.series.push(currency.symbol);
+            $scope.data.push(currency.buyHistory);
         } else {
-            $scope.historyChart.config.data.datasets = $scope.historyChart.config.data.datasets.filter(function(dataset) {
-                return dataset.label != currency.symbol;
-            });
-        }
-        $scope.historyChart.update();
-    }
-
-    addCurrency = function(currency) {
-        var newColor = 'rgb(' + Math.floor(Math.random() * 256) + ', ' + Math.floor(Math.random() * 256) + ', ' + Math.floor(Math.random() * 256) + ')';
-        $scope.historyChart.config.data.datasets.push({
-            label: currency.symbol,
-            tension: 0,
-            fill: false,
-            data: [],
-            borderColor: newColor,
-            backgroundColor: Chart.helpers.color(newColor).alpha(0.5).rgbString(),
-        });
-
-        for (i = 0; i < currency.buyHistory.length; i++) {
-            $scope.historyChart.config.data.datasets[$scope.historyChart.config.data.datasets.length - 1].data.push({
-                // Time format must match the above timeformat 'DD/MM/YYYY HH:mm'
-                x: currency.buyHistory[i].date,
-                y: currency.buyHistory[i].value
-            });
+            index = $scope.series.indexOf(currency.symbol);
+            if (index >= 0) {
+                $scope.series.splice(index, 1);
+                $scope.data.splice(index, 1);
+            }
         }
     }
+
+    $scope.refresh();
 });
-
 
 mgfApp.controller('ConverterController', function($scope, $http) {
     $http.get("/data/currentRates.json")
