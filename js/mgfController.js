@@ -125,7 +125,9 @@ mgfApp.controller('exchangeRatesController', function($scope, $http) {
     $scope.refresh = function() {
         $http.get("/data/currentRates.json")
             .then( function(response) {
-                $scope.currencyTable = response.data;
+                $scope.currencyTable = response.data.Data;
+
+                $scope.updateTime = response.data.Updated;
                 $scope.series = [];
                 $scope.data = [];
 
@@ -137,11 +139,13 @@ mgfApp.controller('exchangeRatesController', function($scope, $http) {
     }
 
     $scope.toggleVisibility = function(currency) {
-        if (currency.show) {
-            $scope.series.push(currency.symbol);
-            $scope.data.push(currency.buyHistory);
+        if (currency.Show) {
+            console.log('Show!');
+            console.log(currency);
+            $scope.series.push(currency.Symbol);
+            $scope.data.push(currency.Buy);
         } else {
-            index = $scope.series.indexOf(currency.symbol);
+            index = $scope.series.indexOf(currency.Symbol);
             if (index >= 0) {
                 $scope.series.splice(index, 1);
                 $scope.data.splice(index, 1);

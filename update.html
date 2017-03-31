@@ -1,7 +1,8 @@
 <html>
     <head>
         <link rel = "stylesheet" type = "text/css" href = "css/bootstrap.min.css">
-        <link rel = "stylesheet" type = "text/css" href = "css/nice.css" />
+        <link rel = "stylesheet" type = "text/css" href = "css/font-awesome.min.css">
+        <link rel = "stylesheet" type = "text/css" href = "css/main.css">
 
         <script src="js/jquery.min.js" type="text/javascript"></script>
         <script src="js/bootstrap.min.js" type="text/javascript"></script>
@@ -20,15 +21,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr data-ng-repeat = "currency in currencyTable">
-                        <td> <!--<img src="/images/flags/{{currency.symbol}}">--> {{ currency.name }} </td>
-                        <td> {{ currency.symbol }} </td>
-                        <td> <input type="number" ng-model="currency.buy" step = 0.05></td>
-                        <td> <input type="number" ng-model="currency.sell" step = 0.05></td>
+                    <tr data-ng-repeat = "(symbol, value) in currencyTable">
+                        <td> <img src="/images/flags/{{value.Symbol}}.png"> {{ value.Name }} </td>
+                        <td> {{ value.Symbol }} </td>
+                        <td> <input type="number" ng-model="value.CurBuy" step = 0.0001></td>
+                        <td> <input type="number" ng-model="value.CurSell" step = 0.0001></td>
                     </tr>
                     <tr>
                         <td colspan="2"> <input type="submit" value="Submit" ng-click="submit()"> </td>
                         <td colspan="2"> <input type="submit" value="Reset" ng-click="reset()"> </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"> {{ status }} </td>
+                    </tr>
                 </tbody>
             </table>
         </div>

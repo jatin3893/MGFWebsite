@@ -5,7 +5,7 @@ updateApp.controller('ExchangeValueController', function($scope, $http) {
     $scope.reset = function() {
         $http.get("/data/currentRates.json")
         .then( function(response) {
-            $scope.currencyTable = response.data;
+            $scope.currencyTable = response.data['Data'];
         });
     }
 
@@ -14,9 +14,9 @@ updateApp.controller('ExchangeValueController', function($scope, $http) {
     $scope.submit = function() {
         postData = {}
         $scope.currencyTable.forEach(function(currency) {
-            postData[currency.symbol] = {
-                buy: currency.buy,
-                sell: currency.sell
+            postData[currency.Symbol] = {
+                'Buy': currency.CurBuy,
+                'Sell': currency.CurSell
             }
         }, this);
 
@@ -27,7 +27,7 @@ updateApp.controller('ExchangeValueController', function($scope, $http) {
                 'data': postData
             }
         }).then(function(response) {
-            console.log(response.data);
+            $scope.status = response.data;
         });
     }
 });
