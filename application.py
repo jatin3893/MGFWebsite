@@ -9,91 +9,92 @@ import datetime
 
 CurrentRateFile = 'data/CurrentRates.json'
 
-kCurrencyList = {
-    "USD": "U.S. Dollar", 
-    "MUR": "Mauritius Rupee", 
-    "IDR": "Indonesian Rupiah", 
-    "AED": "U.A.E. Dirham", 
-    "GBP": "Great Britain Pound", 
-    "LKR": "Sri Lankan Rupee", 
-    "CAD": "Canadian Dollar", 
-    "MYR": "Malaysian Ringgit", 
-    "QAR": "Qatar Rial", 
-    "SAR": "Saudi Riyal", 
-    "SEK": "Swedish Krona", 
-    "SGD": "Singapore Dollar", 
-    "HKD": "Hong Kong Dollar", 
-    "AUD": "Australian Dollar", 
-    "CHF": "Swiss Franc", 
-    "CNY": "Chinese Yuan", 
-    "THB": "Thailand Bhat", 
-    "EUR": "Euro", 
-    "MOP": "Macau Pataca", 
-    "INR": "Indian Rupee", 
-    "JPY": "Japan Yen", 
-    "OMR": "Oman Riyal", 
-    "PHP": "Philippine Peso", 
-    "ZAR": "South Africa Rand"
-}
+kCurrencyList = [
+    ("USD", "U.S. Dollar"),
+    ("EUR", "Euro"),
+    ("THB", "Thailand Bhat"),
+    ("AED", "U.A.E. Dirham"),
+    ("CAD", "Canadian Dollar"),
+    ("GBP", "Great Britain Pound"),
+    ("MUR", "Mauritius Rupee"),
+    ("IDR", "Indonesian Rupiah"),
+    ("LKR", "Sri Lankan Rupee"),
+    ("MYR", "Malaysian Ringgit"),
+    ("QAR", "Qatar Rial"),
+    ("SAR", "Saudi Riyal"),
+    ("SEK", "Swedish Krona"),
+    ("SGD", "Singapore Dollar"),
+    ("HKD", "Hong Kong Dollar"),
+    ("AUD", "Australian Dollar"),
+    ("CHF", "Swiss Franc"),
+    ("CNY", "Chinese Yuan"),
+    ("MOP", "Macau Pataca"),
+    ("JPY", "Japan Yen"),
+    ("OMR", "Oman Riyal"),
+    ("PHP", "Philippine Peso"),
+    ("ZAR", "South Africa Rand"),
+    ("INR", "Indian Rupee")
+]
+
+kDefaultShow = [
+    'USD',
+    'EUR'
+]
 
 kMaxHistory = 60
 
-kName = 'Name'
-kSymbol = 'Symbol'
-kBuy = 'Buy'
-kSell = 'Sell'
-kShow = 'Show'
-kData = 'Data'
-kCurSell = 'CurSell'
-kCurBuy = 'CurBuy'
-kLastUpdated = 'Updated'
+kName = 'name'
+kSymbol = 'symbol'
+kBuy = 'buy'
+kSell = 'sell'
+kData = 'data'
+kCurSell = 'curSell'
+kCurBuy = 'curBuy'
+kTime = 'time'
+kOrder = 'order'
+kShow = 'show'
 
 kCurrencyTemplate = {
     kName: 'UNKNOWN',
     kSymbol: 'UNK',
     kBuy: [1],
     kSell: [1],
-    kShow: False
 }
 
 class SimpleRequestHandler(web.RequestHandler):
     def post(self, update):
         if update == 'update_rate':
             currentTime = datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
-            changes = json.loads(self.request.body)['data']
-            print changes
+            changeDict = json.loads(self.request.body)['data']
 
             currencyDict = None
             with open(CurrentRateFile, 'r') as fp:
                 currencyDict = json.load(fp)
-            
-            for currency in currencyDict[kData]:
-                if currency[kSymbol] not in changes:
-                    print currency[kSymbol]
-                    continue
 
-                symbol = currency[kSymbol]
-                print currency
-                print changes[symbol]
-                if currency.get(kCurBuy, None) != changes[symbol][kBuy]:
+            for symbol in changeDict:
+                change = changeDict[symbol]
+                currency = currencyDict[symbol]
+            
+                if currency[kCurBuy] and currency[kCurBuy] != change.get(kBuy, None):
                     currency[kBuy].append({
                         'x': currentTime,
-                        'y': changes[symbol][kBuy]
+                        'y': change[kBuy]
                     })
-                    currency[kCurBuy] = changes[symbol][kBuy]
+                    currency[kCurBuy] = change[kBuy]
 
-                if currency.get(kCurSell, None) != changes[symbol][kBuy]:
+                if currency[kCurSell] and currency[kCurSell] != change.get(kSell, None):
                     currency[kSell].append({
                         'x': currentTime,
-                        'y': changes[symbol][kSell]
+                        'y': change[kSell]
                     })
-                    currency[kCurSell] = changes[symbol][kBuy]
+                    currency[kCurSell] = change[kSell]
                 
+                # Adjust history length
                 currency[kBuy] = currency[kBuy][-kMaxHistory:]
                 currency[kSell] = currency[kSell][-kMaxHistory:]
 
             with open(CurrentRateFile, 'w') as fp:
-                currencyDict[kLastUpdated] = currentTime
+                currencyDict[kTime] = currentTime
                 json.dump(currencyDict, fp, indent=4)
                 self.write('New Rates Added')
 
@@ -117,21 +118,28 @@ def init():
     except ValueError:
         currencyDict = {}
 
-    currencyDict.setdefault(kData, [])
-    
-    currentCurrencyList = [currency[kSymbol] for currency in currencyDict[kData]]
-    for symbol in kCurrencyList:
-        if symbol not in currentCurrencyList:
-            currencyDict[kData].append({
-                kSymbol: symbol,
-                kName: kCurrencyList[symbol],
-                kShow: False,
-                kSell: [1],
-                kBuy: [1],
-                kCurBuy: 1,
-                kCurSell: 1
-            })
-    
+    defaultCurrencyValue = 1
+    currentTime = datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+    for symbol, name in kCurrencyList:
+        currencyDict.setdefault(symbol, {
+            kSymbol: symbol,
+            kName: name,
+            kSell: [ {
+                'x': currentTime,
+                'y': defaultCurrencyValue
+            }],
+            kBuy: [{
+                'x': currentTime,
+                'y': defaultCurrencyValue
+            }],
+            kCurBuy: defaultCurrencyValue,
+            kCurSell: defaultCurrencyValue
+        })
+
+    currencyDict[kOrder] = [symbol for symbol, name in kCurrencyList]
+    currencyDict[kTime] = currentTime
+    currencyDict[kShow] = kDefaultShow
+ 
     with open(CurrentRateFile, 'w') as fp:
         json.dump(currencyDict, fp, indent=4)
 

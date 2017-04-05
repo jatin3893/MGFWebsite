@@ -8,7 +8,7 @@
             <div class="col-lg-5 col-md-5 col-sm-4 col-xs-4 dropdown-container">
                 <select class="btn btn-success dropdown-toggle" 
                         ng-model="fromCurrency" 
-                        ng-options="child as child.symbol for child in currencyTable" 
+                        ng-options="symbol as symbol for symbol in currencyTable.order" 
                         ng-change="fromChanged()">
                 </select>
             </div>
@@ -27,7 +27,7 @@
             <div class="col-lg-5 col-md-5 col-sm-4 col-xs-4 dropdown-container">
                 <select class="btn btn-success dropdown-toggle" 
                         ng-model="toCurrency" 
-                        ng-options="child as child.symbol for child in currencyTable" 
+                        ng-options="symbol as symbol for symbol in currencyTable.order" 
                         ng-change="toChanged()">
                 </select>
             </div>

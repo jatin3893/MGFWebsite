@@ -12,12 +12,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr data-ng-repeat = "currency in currencyTable">
-                        <td> <img src="/images/flags/{{currency.symbol}}.png"> {{ currency.Name }} </td>
-                        <td> {{ currency.Symbol }} </td>
-                        <td> {{ currency.CurBuy }} </td>
-                        <td> {{ currency.CurSell }} </td>
-                        <td> <input type="checkbox" ng-model = "currency.Show" ng-change="toggleVisibility(currency)"> </td>
+                    <tr data-ng-repeat = "symbol in currencyTable.order">
+                        <td> <img src="/images/flags/{{symbol}}.png"> {{ currencyTable[symbol].name }} </td>
+                        <td> {{ symbol }} </td>
+                        <td> {{ currencyTable[symbol].curBuy }} </td>
+                        <td> {{ currencyTable[symbol].curSell }} </td>
+                        <td> <input type="checkbox" ng-model = "showTable[symbol]" ng-change="toggleVisibility(symbol)"> </td>
                     </tr>
                 </tbody>
             </table>

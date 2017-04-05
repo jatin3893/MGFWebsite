@@ -119,33 +119,47 @@ mgfApp.controller('exchangeRatesController', function($scope, $http) {
         },
         legend: {
             display: true
+        },
+        elements: {
+            line: {
+                tension: 0
+            }
         }
     };
 
     $scope.refresh = function() {
         $http.get("/data/currentRates.json")
             .then( function(response) {
-                $scope.currencyTable = response.data.Data;
+                $scope.currencyTable = response.data;
+                if ($scope.showTable == undefined) {
+                    $scope.showTable = {};
 
-                $scope.updateTime = response.data.Updated;
+                    $scope.currencyTable.show.forEach(function(symbol) {
+                        $scope.showTable[symbol] = true;
+                    }, this);
+                }
+
+                $scope.updateTime = $scope.currencyTable.time;
                 $scope.series = [];
                 $scope.data = [];
 
-                $scope.currencyTable.forEach(function(currency) {
-                    $scope.toggleVisibility(currency);
-                }, this);
+                for (key in $scope.showTable) {
+                    if ($scope.showTable[key])
+                        $scope.toggleVisibility(key);
+                }
             }
         );
     }
 
-    $scope.toggleVisibility = function(currency) {
-        if (currency.Show) {
-            console.log('Show!');
-            console.log(currency);
-            $scope.series.push(currency.Symbol);
-            $scope.data.push(currency.Buy);
+    $scope.toggleVisibility = function(symbol) {
+        currency = $scope.currencyTable[symbol];
+
+        // If entry does not exist in the show column
+        if ($scope.showTable[symbol]) {
+            $scope.series.push(symbol);
+            $scope.data.push(currency.buy);
         } else {
-            index = $scope.series.indexOf(currency.Symbol);
+            index = $scope.series.indexOf(symbol);
             if (index >= 0) {
                 $scope.series.splice(index, 1);
                 $scope.data.splice(index, 1);
@@ -164,18 +178,22 @@ mgfApp.controller('ConverterController', function($scope, $http) {
         });
 
     $scope.init = function() {
-        $scope.fromCurrency = $scope.currencyTable[0];
-        $scope.toCurrency = $scope.currencyTable[0];
+        $scope.fromCurrency = $scope.currencyTable.order[0];
+        $scope.toCurrency = $scope.currencyTable.order[0];
         $scope.fromQuantity = 1;
         $scope.toQuantity = 1;
     }
 
 
     $scope.toChanged = function() {
-        $scope.fromQuantity = ($scope.toQuantity * $scope.toCurrency.buy) / $scope.fromCurrency.buy;
+        toBuy = $scope.currencyTable[$scope.toCurrency].curBuy;
+        fromBuy = $scope.currencyTable[$scope.fromCurrency].curBuy;
+        $scope.fromQuantity = ($scope.toQuantity * toBuy) / fromBuy;
     }
     $scope.fromChanged = function() {
-        $scope.toQuantity = ($scope.fromQuantity * $scope.fromCurrency.buy) / $scope.toCurrency.buy;
+        toBuy = $scope.currencyTable[$scope.toCurrency].curBuy;
+        fromBuy = $scope.currencyTable[$scope.fromCurrency].curBuy;
+        $scope.toQuantity = ($scope.fromQuantity * fromBuy) / toBuy;
     }
 });
 
@@ -183,5 +201,6 @@ mgfApp.controller('CurrencyTableController', function($scope, $http) {
     $http.get("/data/currentRates.json")
         .then( function(response) {
             $scope.currencyTable = response.data;
+            $scope.currencyTable.order = $scope.currencyTable.order.slice(0, 6);
         });
 });

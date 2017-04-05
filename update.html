@@ -21,11 +21,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr data-ng-repeat = "(symbol, value) in currencyTable">
-                        <td> <img src="/images/flags/{{value.Symbol}}.png"> {{ value.Name }} </td>
-                        <td> {{ value.Symbol }} </td>
-                        <td> <input type="number" ng-model="value.CurBuy" step = 0.0001></td>
-                        <td> <input type="number" ng-model="value.CurSell" step = 0.0001></td>
+                    <tr data-ng-repeat = "symbol in currencyTable.order">
+                        <td> <img src="/images/flags/{{symbol}}.png"> {{ currencyTable[symbol].name }} </td>
+                        <td> {{ symbol }} </td>
+                        <td> <input type="number" ng-model="currencyTable[symbol].curBuy" step = 0.0001></td>
+                        <td> <input type="number" ng-model="currencyTable[symbol].curSell" step = 0.0001></td>
                     </tr>
                     <tr>
                         <td colspan="2"> <input type="submit" value="Submit" ng-click="submit()"> </td>
